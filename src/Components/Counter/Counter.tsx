@@ -8,7 +8,8 @@ import {
 } from "../../state/Counter/CounterSlice";
 
 const Counter = () => {
-  const count = useSelector((state: RootState) => state.counter.value);
+  //const count = useSelector((state: RootState) => state.counter.value);
+  const count = useSelector((state: RootState) => state.value);
   const dispatch = useDispatch();
 
   return (

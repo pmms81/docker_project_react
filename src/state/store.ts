@@ -1,7 +1,14 @@
 import {configureStore} from "@reduxjs/toolkit";
+import { persistStore, persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 import counterReducer from "../state/Counter/CounterSlice";
 
-export const store = configureStore({
+const persistConfig = {
+  key: "root",
+  storage,
+};
+
+/*export const store = configureStore({
   reducer: {
     counter: counterReducer,
   },
@@ -9,3 +16,19 @@ export const store = configureStore({
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+*/
+
+const persistedReducer = persistReducer(persistConfig, counterReducer);
+
+export const store = configureStore({
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"],
+      },
+    }),
+});
+
+export const persistor = persistStore(store);
+export type RootState = ReturnType<typeof store.getState>;
